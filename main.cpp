@@ -227,7 +227,7 @@ int main() {
         // Optional challenge authentication: no deletion of the user's pre-existing fallback.
         if(fs::exists(scriptPath)&&fs::exists(keyPath)) {if(!verify())return 2;}
         else std::cout<<"Challenge helper unavailable; continuing with local inventory.\n";
-        std::array<std::string,220> inventory{};
+        std::array<std::string,211> inventory{};
 
          for(size_t i=0;i<inventory.size();++i)
             inventory[i]="[Inventory item " + std::to_string(i+1) + "]";
@@ -444,13 +444,6 @@ int main() {
         inventory[210] = "2612155 card";
         inventory[211] = "massif glideport fat ass run";
         inventory[212] = "tile";
-        inventory[213] = "";
-        inventory[214] = "";
-        inventory[215] = "";
-        inventory[216] = "";
-        inventory[217] = "";
-        inventory[218] = "";
-        inventory[219] = "";
 
         browse({inventory.begin(),inventory.end()},"Car inventory");
 
