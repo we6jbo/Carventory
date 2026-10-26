@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-25T17:59:07-07:00",
+  "project_id": "carventory",
+  "reference": "Carventory portable provenance snapshot",
+  "codes": [
+    "TG333041",
+    "TG654147"
+  ],
+  "records": [
+    {
+      "code": "TG333041",
+      "registry_matches": [
+        {
+          "person_no": 79,
+          "display_name": "Mary Jane Sumner",
+          "details": "B:1839 Pennsylvania D:before 1880 Pennsylvania",
+          "name_permanent": 0,
+          "code": "TG333041",
+          "kind": "TG",
+          "permanent": 0,
+          "aliases": [],
+          "provisional_facts": [],
+          "relationships": [
+            {
+              "child": "Mary Thorpe",
+              "parent": "Mary Jane Sumner",
+              "relation": "parent",
+              "confidence": 1.0,
+              "permanent": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "TG654147",
+      "registry_matches": [
+        {
+          "person_no": 32,
+          "display_name": "James McCabe",
+          "details": "B:About 1840 Ireland",
+          "name_permanent": 0,
+          "code": "TG654147",
+          "kind": "TG",
+          "permanent": 0,
+          "aliases": [],
+          "provisional_facts": [],
+          "relationships": [
+            {
+              "child": "Edward Mccabe",
+              "parent": "James McCabe",
+              "relation": "parent",
+              "confidence": 1.0,
+              "permanent": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "portable": true,
+  "note": "This snapshot lets the project retain its TG/AKA provenance without requiring the local T14 registry."
+}

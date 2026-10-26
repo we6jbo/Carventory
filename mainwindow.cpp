@@ -1,14 +1,2 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
+// Reserved for compatibility with the original Qt Creator project.
+// Carventory is now terminal-only and does not instantiate a window.
