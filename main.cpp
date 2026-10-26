@@ -30,8 +30,8 @@ static constexpr const char* timePath = "/tmp/fwd/challenge_time.txt";
 static constexpr const char* provenance = "TG333041,TG654147";
 static constexpr const char* projectRoot = "/home/we6jbo/Projects/Carventory";
 static constexpr const char* backupRoot = "/home/we6jbo/.forvibe-102526";
-// Required user-selected passphrase. WARNING: embedded in the source and binary.
-static constexpr const char* backupPassphrase = "BfxzCyGpJWl2MrY";
+// Backup passphrase is kept outside the source and binary, like the challenge key.
+static constexpr const char* backupKeyPath = "/home/we6jbo/.ads/carventory-backup.key";
 
 std::string hex(const unsigned char* p, size_t n) {
     static constexpr char d[] = "0123456789abcdef";
@@ -131,13 +131,13 @@ std::vector<unsigned char> fileBytes(const fs::path& f) {
     std::ifstream in(f,std::ios::binary);if(!in)throw std::runtime_error("Cannot open input");
     return {std::istreambuf_iterator<char>(in),std::istreambuf_iterator<char>()};
 }
-void encryptBackup(const fs::path& source,const fs::path& dest) {
+void encryptBackup(const fs::path& source,const fs::path& dest,const std::string& passphrase) {
     // CARV1 + 16-byte salt + 12-byte nonce + ciphertext + 16-byte GCM tag.
-    // PBKDF2 200,000 rounds. Static passphrase is not a strong secret.
+    // PBKDF2 200,000 rounds. Passphrase is supplied via the protected key file.
     const auto plain=fileBytes(source);
     std::array<unsigned char,16> salt{},tag{};std::array<unsigned char,12> iv{};std::array<unsigned char,32> key{};
     if(RAND_bytes(salt.data(),salt.size())!=1 || RAND_bytes(iv.data(),iv.size())!=1)throw std::runtime_error("Random generation failed");
-    if(PKCS5_PBKDF2_HMAC(backupPassphrase,-1,salt.data(),salt.size(),200000,EVP_sha256(),key.size(),key.data())!=1)throw std::runtime_error("KDF failed");
+    if(PKCS5_PBKDF2_HMAC(passphrase.c_str(),-1,salt.data(),salt.size(),200000,EVP_sha256(),key.size(),key.data())!=1)throw std::runtime_error("KDF failed");
     EVP_CIPHER_CTX* c=EVP_CIPHER_CTX_new();if(!c)throw std::runtime_error("Cipher allocation failed");
     std::vector<unsigned char> ciphertext(plain.size()+16);int a=0,b=0;
     bool ok=EVP_EncryptInit_ex(c,EVP_aes_256_gcm(),nullptr,key.data(),iv.data())==1 &&
@@ -156,6 +156,10 @@ void encryptBackup(const fs::path& source,const fs::path& dest) {
 void backupModifiedMain() {
     const fs::path source=fs::path(projectRoot)/"main.cpp";
     if(!fs::exists(source))throw std::runtime_error("Project main.cpp missing");
+    std::string backupPass;
+    try {backupPass=readOneLine(backupKeyPath);}
+    catch(const std::exception&) {std::cout<<"Backup key unavailable at "<<backupKeyPath<<"; skipping encrypted backup.\n";return;}
+    if(backupPass.empty()) {std::cout<<"Backup key is empty; skipping encrypted backup.\n";return;}
     const auto bytes=fs::space(source.parent_path()).available;
     constexpr std::uintmax_t minBytes=109ULL*1024*1024*1024;
     if(bytes<minBytes) {std::cout<<"Backup skipped: less than 109 GiB available.\n";return;}
@@ -167,7 +171,7 @@ void backupModifiedMain() {
     auto ms=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     fs::path dest;
     do {dest=fs::path(backupRoot)/(std::to_string(ms++)+"main.cpp");} while(fs::exists(dest));
-    encryptBackup(source,dest);
+    encryptBackup(source,dest,backupPass);
     const fs::path hashTmp=fs::path(backupRoot)/"hash.md5.tmp";
     {std::ofstream out(hashTmp,std::ios::trunc);if(!out)throw std::runtime_error("Cannot write hash temp file");out<<digest<<"  "<<source.string()<<'\n';out.flush();if(!out)throw std::runtime_error("Hash write failed");}
     fs::permissions(hashTmp,fs::perms::owner_read|fs::perms::owner_write,fs::perm_options::replace);
@@ -335,6 +339,7 @@ int main() {
         inventory[93] = "bandaids";
         inventory[94] = "antenna for lilygo";
         inventory[95] = "cables: mini hdmi to raspberry pi keyboard hdmi, headphones,headphones, earphones, magnetic antenna, usb speaker, hdmi to hdmi, usb to usb c";
+        inventory[96] = "(no item recorded)";
         inventory[97] = "gel cam by colgate";
         inventory[98] = "husky t27 to t10 star bit";
         inventory[99] = "m3-.50 lock nut metric nylon insert";
