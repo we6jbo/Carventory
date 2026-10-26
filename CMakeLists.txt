@@ -9,6 +9,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(OpenSSL REQUIRED COMPONENTS Crypto)
 
 qt_add_executable(Carventory
     main.cpp
@@ -18,7 +19,10 @@ qt_add_executable(Carventory
 )
 
 target_link_libraries(Carventory PRIVATE Qt6::Widgets)
-
+target_link_libraries(Carventory PRIVATE
+    Qt6::Widgets
+    OpenSSL::Crypto
+)
 install(TARGETS Carventory
     RUNTIME DESTINATION bin
 )

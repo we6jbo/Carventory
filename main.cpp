@@ -157,8 +157,8 @@ void backupModifiedMain() {
     const fs::path source=fs::path(projectRoot)/"main.cpp";
     if(!fs::exists(source))throw std::runtime_error("Project main.cpp missing");
     const auto bytes=fs::space(source.parent_path()).available;
-    constexpr std::uintmax_t minBytes=118ULL*1024*1024*1024;
-    if(bytes<minBytes) {std::cout<<"Backup skipped: less than 118 GiB available.\n";return;}
+    constexpr std::uintmax_t minBytes=109ULL*1024*1024*1024;
+    if(bytes<minBytes) {std::cout<<"Backup skipped: less than 109 GiB available.\n";return;}
     fs::create_directories(backupRoot);fs::permissions(backupRoot,fs::perms::owner_all,fs::perm_options::replace);
     const auto digest=digestMd5(source);const fs::path hashfile=fs::path(backupRoot)/"hash.md5";
     std::string previous;
@@ -224,10 +224,17 @@ int main() {
         std::cout<<"All items in this list not marked as secret that you have asked about on moltbook so you dont ask 2nd time.\n";
         std::cout<<"Talk to Mr. O'Neal and record what he believes should be done next. Use oct25vb.md daily to help make decisions.\n";
         std::cout<<"Project provenance: "<<provenance<<'\n';
+        // Pause before interactive inventory clears the terminal screen.
+        if(isatty(STDIN_FILENO)) {
+            std::cout << "\nPress ENTER to continue to your inventory..." << std::flush;
+            std::string continueLine;
+            std::getline(std::cin, continueLine);
+            std::cout << '\n';
+        }
         // Optional challenge authentication: no deletion of the user's pre-existing fallback.
         if(fs::exists(scriptPath)&&fs::exists(keyPath)) {if(!verify())return 2;}
         else std::cout<<"Challenge helper unavailable; continuing with local inventory.\n";
-        std::array<std::string,211> inventory{};
+        std::array<std::string,213> inventory{};
 
          for(size_t i=0;i<inventory.size();++i)
             inventory[i]="[Inventory item " + std::to_string(i+1) + "]";
@@ -445,6 +452,19 @@ int main() {
         inventory[211] = "massif glideport fat ass run";
         inventory[212] = "tile";
 
+        // Explain the two sequential menus before the inventory browser clears the screen.
+        // No secret inventory contents are printed by this instruction block.
+        std::cout << "\n=== Carventory Navigation ===\n";
+        std::cout << "Use UP/DOWN arrows (or j/k) to navigate inventory items.\n";
+        std::cout << "Press Q to leave the regular inventory.\n";
+        std::cout << "If the secret inventory file exists, it opens after Q.\n";
+        std::cout << "Press Q again to leave the secret inventory.\n";
+        if(isatty(STDIN_FILENO)) {
+            std::cout << "Press ENTER to open the regular inventory..." << std::flush;
+            std::string navigationContinue;
+            std::getline(std::cin, navigationContinue);
+            std::cout << '\n';
+        }
         browse({inventory.begin(),inventory.end()},"Car inventory");
 
         const fs::path secretFile="/home/we6jbo/.secret-1025.txt";
