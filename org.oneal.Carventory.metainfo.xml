@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.oneal.Carventory</id>
+  <name>Carventory</name>
+  <summary>Browse a local vehicle inventory in the terminal</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  <description>
+    <p>Carventory is an offline, terminal-based inventory browser for items stored in a vehicle. It displays a source-defined list and can optionally display a separate local private inventory file.</p>
+    <p>Its backup function encrypts changed source files when sufficient storage is available. Backups use a passphrase embedded in the published source code and must not be relied on for strong confidentiality.</p>
+  </description>
+  <launchable type="desktop-id">org.oneal.Carventory.desktop</launchable>
+  <categories>
+    <category>Utility</category>
+  </categories>
+</component>

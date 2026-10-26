@@ -18,7 +18,6 @@ qt_add_executable(Carventory
     mainwindow.ui
 )
 
-target_link_libraries(Carventory PRIVATE Qt6::Widgets)
 target_link_libraries(Carventory PRIVATE
     Qt6::Widgets
     OpenSSL::Crypto
@@ -26,3 +25,11 @@ target_link_libraries(Carventory PRIVATE
 install(TARGETS Carventory
     RUNTIME DESTINATION bin
 )
+
+# Flathub desktop integration
+install(FILES org.oneal.Carventory.desktop
+        DESTINATION share/applications)
+install(FILES org.oneal.Carventory.metainfo.xml
+        DESTINATION share/metainfo)
+install(FILES org.oneal.Carventory.svg
+        DESTINATION share/icons/hicolor/scalable/apps)

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Carventory
+Comment=Browse a local vehicle inventory
+Exec=Carventory
+Icon=org.oneal.Carventory
+Terminal=true
+Categories=Utility;
+Keywords=car;vehicle;inventory;terminal;

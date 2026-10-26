@@ -1,9 +1,24 @@
+# Build outputs and Qt Creator state
 build/
 build-*/
+build-dir/
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 *.o
 *.user
+.qtcreator/
+.flatpak-builder/
+
+# Local backups, recovery metadata and transient publish checks
+.git-backup/
+*.before-*
+.oneal-flathub-readiness-ok
+*.core
+core
+core.*
+
+# Private inventory and encryption materials
 .secret*
 *.enc
+*.key
